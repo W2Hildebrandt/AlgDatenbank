@@ -1,0 +1,36 @@
+<component name="libraryTable">
+  <library name="odftoolkit.odfdom.java" type="repository">
+    <properties maven-id="org.odftoolkit:odfdom-java:0.12.0" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/odfdom-java-0.12.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/xercesImpl-2.12.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/serializer-2.7.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jena-core-4.10.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jena-base-4.10.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-csv-1.10.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-io-2.14.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-codec-1.16.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-collections4-4.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/caffeine-3.1.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/checker-qual-3.37.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/error_prone_annotations-2.21.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/collection-0.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jena-iri-4.10.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-cli-1.5.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/RoaringBitmap-1.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/java-rdfa-1.0.0-BETA1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-validator-1.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-beanutils-1.9.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-digester-2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-logging-1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-collections-3.2.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-lang3-3.14.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/json-20231013.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/slf4j-api-1.7.36.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/slf4j-simple-1.7.36.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-compress-1.25.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
