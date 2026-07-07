@@ -1,4 +1,5 @@
-# ALG Databank - Druck-Verbesserungen & Drucker-Dialog
+
+## ALG Databank - Druck-Verbesserungen & Drucker-Dialog
 
 ## Zusammenfassung der Änderungen
 
