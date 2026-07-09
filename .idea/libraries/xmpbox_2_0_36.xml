@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="xmpbox-2.0.36">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/jars/xmpbox-2.0.36.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

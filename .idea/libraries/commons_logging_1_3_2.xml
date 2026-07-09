@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="commons-logging-1.3.2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/jars/commons-logging-1.3.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jars/flying-saucer-core-9.1.22.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jars/fontbox-2.0.31.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jars/graphics2d-0.43.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jars/openhtmltopdf-core-1.0.10.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jars/openhtmltopdf-pdfbox-1.0.10.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jars/openhtmltopdf-svg-support-1.0.10.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jars/pdfbox-2.0.31.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jars/reactive-streams-1.0.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jars/xmpbox-2.0.36.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
