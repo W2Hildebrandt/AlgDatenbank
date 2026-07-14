@@ -758,8 +758,6 @@ public class AlgDatabankGui extends JFrame {
         return mainPanel;
     }
 
-
-
     private void anpassenSpaltenBreiten() {
         int[] breiten = {50, 80, 80, 60, 60, 120, 100, 150, 70, 120, 100, 150, 200};
         for (int i = 0; i < breiten.length; i++) {
@@ -1026,12 +1024,6 @@ public class AlgDatabankGui extends JFrame {
             if (!e.getValueIsAdjusting()) {
 
                 // --- RESET DER GEBLOCKTEN BUTTONS BEI NEUWAHL ---
-                //btnEtikettDrucken.setEnabled(true);
-                //btnEtikettDrucken.setText("Etikett drucken");
-                //btnEtikettDrucken.setBackground(null); // Standardfarbe wiederherstellen
-                //btnEtikettDrucken.setForeground(null);
-                //btnEtikettDrucken.setBorder(UIManager.getBorder("Button.border")); // Standard-Rahmen
-
                 btnUmschlagDrucken.setEnabled(true);
                 btnUmschlagDrucken.setText("Umschlag (DL)");
                 btnUmschlagDrucken.setBackground(null);
@@ -1041,7 +1033,6 @@ public class AlgDatabankGui extends JFrame {
 
                 int selectedRow = tabelle.getSelectedRow();
                 int[] selectedRows = tabelle.getSelectedRows();
-
                 // ... hier folgt dein bestehender Code (if (selectedRows.length > 1) etc.) ...
 
                 if (selectedRows.length > 1) {
@@ -2317,7 +2308,7 @@ public class AlgDatabankGui extends JFrame {
         // 1. Inhalt sicherstellen
         String htmlInhalt = getBriefVorschauInhalt();
         if (istUnbrauchbarerDruckInhalt(htmlInhalt)) htmlInhalt = getEditorInhalt();
-        if (istUnbrauchbarerDruckInhalt(htmlInhalt)) htmlInhalt = ladeVorlageAusRessourcen("templates/algorithmus1.html");
+        if (istUnbrauchbarerDruckInhalt(htmlInhalt)) htmlInhalt = ladeVorlageAusRessourcen("ressourcen/algorithmus1.html");
         if (istUnbrauchbarerDruckInhalt(htmlInhalt)) htmlInhalt = ladeStandardTemplate(2);
 
         if (istUnbrauchbarerDruckInhalt(htmlInhalt)) {
