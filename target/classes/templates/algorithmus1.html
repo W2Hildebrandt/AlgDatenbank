@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html lang="de" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8" />
+    <title>AlgDatenbank - Briefdruck Vorlage</title>
+
+    <style>
+        /* NUR FÜR DEN RENDERER: GUI-Styling überschreiben */
+        @media print {
+            body { background-color: #ffffff !important; padding: 0 !important; }
+            .din-a4-blatt { box-shadow: none !important; margin: 0 !important; }
+        }
+
+        @page { size: A4; margin: 15mm; }
+        body { width: 100%; }
+
+        /* Hintergrund der GUI (analog zum dunklen Arbeitsbereich in LibreOffice) */
+        body {
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* Das simulierte DIN A4 Blatt Papier */
+        .din-a4-blatt {
+            background-color: #ffffff;
+            width: 210mm;
+            min-height: 297mm;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            box-sizing: border-box;
+            position: relative;
+
+            /* Offizielle Ränder nach DIN 5008 */
+            padding-left: 25mm;  /* Linker Rand zum Lochen */
+            padding-right: 20mm;
+            padding-top: 20mm;
+            padding-bottom: 30mm;
+
+            font-family: Arial, sans-serif;
+            font-size: 12pt;
+            color: #000000;
+            line-height: 1.35;
+
+            /* Für Druck: verwende max-width statt width */
+            margin: 0 auto;
+        }
+
+        /* Ergänzungen für Stabilität im PdfExporter */
+        @media print {
+            /* Erzwingt A4 und zentriert den Inhalt im Ausdruck */
+            @page {
+                size: A4 portrait;
+                margin: 15mm;
+            }
+
+            /* Verhindert Seitenumbrüche in kritischen Bereichen */
+            .betreff, .gruss-bereich, .adresse-block {
+                page-break-inside: avoid;
+            }
+
+            /* Hintergrund ausblenden, falls der Druckertreiber Probleme macht */
+            body {
+                background-color: #ffffff !important;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+
+        /* Sicherstellen, dass die Brief-Fußzeile am Seitenende klebt */
+        .din-a4-blatt {
+            display: flex;
+            flex-direction: column;
+            min-height: 277mm; /* 297mm - 20mm margin */
+        }
+        .brief-fusszeile {
+            margin-top: auto; /* Schiebt die Fußzeile immer ans untere Ende */
+        }
+
+        /* Knickhilfe / Faltmarke am linken Rand */
+        .knickhilfe {
+            position: absolute;
+            left: 0;
+            top: 105mm;
+            width: 5mm;
+            height: 1px;
+            background-color: #777777;
+            opacity: 0.6;
+            z-index: 10;
+        }
+
+        /* Briefkopf: Name links, Logo rechts */
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .vereinsname {
+            font-size: 16pt;
+            font-weight: bold;
+            margin: 0;
+            line-height: 1.1;
+        }
+        .vereinsname-sub {
+            font-size: 13pt;
+            font-weight: bold;
+            margin: 4px 0 0 0;
+        }
+
+        /* Logo-Styling für exakte vertikale Einpassung */
+        .logo-bereich img {
+            height: 22mm;
+            width: auto;
+            display: block;
+        }
+
+        /* Horizontale Trennlinie unter dem Kopf */
+        .trennlinie {
+            border: 0;
+            border-top: 1px solid #000000;
+            margin: 8px 0 12px 0;
+        }
+
+        /* Kleine Absenderzeile für das Brieffenster */
+        .ruecksende-info {
+            font-size: 7.5pt;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        /* Empfänger-Anschrift */
+        .adresse-block {
+            margin-bottom: 35px;
+            line-height: 1.2;
+            font-size: 11pt;
+        }
+        .freiraum-4-zeilen {
+            height: 20mm;
+        }
+
+        /* Eine Zeile für Zeichen, Telefon und Datum */
+        .kennzeichen-zeile {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin-bottom: 10mm;
+            font-size: 10pt;
+        }
+        .kennzeichen-spalte {
+            width: 25%;
+            vertical-align: top;
+            padding-right: 8px;
+            text-align: left;
+        }
+        .kennzeichen-label {
+            color: #555;
+            margin-bottom: 2px;
+        }
+        .kennzeichen-wert {
+            font-weight: normal;
+        }
+
+        /* Betreffzeile */
+        .betreff {
+            font-size: 13pt;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        /* Textabsätze */
+        p {
+            margin-top: 0;
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .anrede {
+            margin-bottom: 20px;
+        }
+
+        /* Bankverbindung im Text eingerückt */
+        .bankverbindung-text {
+            margin: 15px 0 20px 30px;
+            font-family: monospace;
+            font-size: 10.5pt;
+            line-height: 1.4;
+        }
+
+        /* Grußformel und Unterschriftenbereich */
+        .gruss-bereich {
+            margin-top: 12mm;
+            line-height: 1.3;
+        }
+        .unterschrift-platz {
+            height: 20mm;
+        }
+
+        /* Offizielle Fußzeile ganz unten am Blattrand */
+        .brief-fusszeile {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            border-top: 0.5px solid #ccc;
+            padding-top: 8px;
+            margin-top: 10mm;
+            font-size: 7.5pt;
+            color: #555;
+            line-height: 1.3;
+        }
+        .fuss-spalte {
+            width: 33.33%;
+            vertical-align: top;
+            padding: 0 10px 0 0;
+        }
+
+        @media print {
+            .knickhilfe {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body contenteditable="true" style="font-family:Arial; font-size:14px;">
+<div class="din-a4-blatt">
+
+    <div class="knickhilfe"></div>
+
+    <div class="header-flex">
+        <div class="vereinsname-bereich">
+            <div class="vereinsname">Arbeitsgemeinschaft</div>
+            <div class="vereinsname-sub">Limnologie und Gewässerschutz e. V.</div>
+        </div>
+        <div class="logo-container">
+            <img id="alg-logo" src="dummy.png" alt="ALG Logo" />
+        </div>
+    </div>
+
+    <hr class="trennlinie" />
+
+    <div class="ruecksende-info">
+        Schatzmeister Arbeitsgemeinschaft Limnologie und Gewässerschutz e.V., Obentrautstr. 14, 30419 Hannover
+    </div>
+
+    <div class="adresse-block">
+        [Anrede]<br />
+        [Vorname] [Nachname]<br />
+        [Strasse]<br />
+        <br />
+        [PLZ] [Ort]
+    </div>
+
+    <div class="freiraum-4-zeilen"></div>
+
+    <table class="kennzeichen-zeile">
+        <tr>
+            <td class="kennzeichen-spalte">
+                <div class="kennzeichen-label">Ihr Zeichen</div>
+                <div class="kennzeichen-wert">&nbsp;</div>
+            </td>
+            <td class="kennzeichen-spalte">
+                <div class="kennzeichen-label">Mein Zeichen</div>
+                <div class="kennzeichen-wert">ALG-Hi</div>
+            </td>
+            <td class="kennzeichen-spalte">
+                <div class="kennzeichen-label">Telefon</div>
+                <div class="kennzeichen-wert">0511/731193</div>
+            </td>
+            <td class="kennzeichen-spalte">
+                <div class="kennzeichen-label">Ort/Datum</div>
+                <div class="kennzeichen-wert">Hannover, den [Datum]</div>
+            </td>
+        </tr>
+    </table>
+
+    <div class="betreff">
+        Betreff: Ihre Mitgliedschaft in der ALG
+    </div>
+
+    <div class="anrede" contenteditable="true">[Brief_Anrede]</div>
+
+    <p contenteditable="true">
+        der Jahresbeitrag für Ihre Mitgliedschaft in der Arbeitsgemeinschaft Limnologie und Gewässerschutz e.V.
+        für das Jahr [Jahr] ist nach Überprüfung meiner Beitragsliste fällig geworden.
+    </p>
+
+    <p contenteditable="true">
+        Ich bitte Sie daher, den Betrag von [Betrag] auf das Konto der ALG:
+    </p>
+
+    <div class="bankverbindung-text">
+        Sparkasse Hannover<br />
+        BIC: SPKHDE2HXXX<br />
+        IBAN: DE66 2505 0180 0910 2217 90
+    </div>
+
+    <p>
+        zu überweisen.
+    </p>
+
+    <div class="gruss-bereich" contenteditable="true">
+        Mit freundlichen Grüßen<br />
+        <div class="unterschrift-platz"></div>
+        Wolfram Hildebrandt<br />
+        (Schatzmeister)
+    </div>
+
+    <table class="brief-fusszeile">
+        <tr>
+            <td class="fuss-spalte">
+                <strong>Anschrift:</strong><br />Schatzmeister Arbeitsgemeinschaft Limnologie<br />
+                und Gewässerschutz e.V.<br />
+                Obentrautstr. 14, 30419 Hannover
+            </td>
+            <td class="fuss-spalte">
+                <strong>Kontakt:</strong><br />
+                Telefon: 0511/731193<br />
+                E-Mail: iwolframhildebrandt@gmx.de<br />
+            </td>
+            <td class="fuss-spalte">
+                <strong>Bankverbindung:</strong><br />
+                Sparkasse Hannover<br />
+                IBAN: DE66 2505 0180 0910 2217 90<br />
+                BIC: SPKHDE2HXXX
+            </td>
+        </tr>
+    </table>
+
+</div>
+</body>
+</html>
