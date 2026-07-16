@@ -6,23 +6,21 @@
     <style>
         body { background-color: #f0f2f5; margin: 0; padding: 20px; }
         .din-a4-blatt {
-            background-color: #ffffff;
-            width: 210mm;
-            min-height: 297mm;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            height: 297mm;
             box-sizing: border-box;
-            position: relative;
-            padding: 20mm 20mm 30mm 25mm;
-            font-family: Arial, sans-serif;
-            font-size: 12pt;
-            line-height: 1.35;
+            padding: 15mm 15mm 10mm 25mm;
+            background-color: #ffffff;
             margin: 0 auto;
         }
         @media print {
             .din-a4-blatt { width: 100%; max-width: 210mm; box-shadow: none; margin: 0; }
             body { background-color: #ffffff; padding: 0; }
         }
-        .knickhilfe { position: absolute; left: 0; top: 105mm; width: 5mm; height: 1px; background-color: #777777; opacity: 0.6; }
+        /* Hauptbereich für den Brieftext */
+        .hauptinhalt { flex-grow: 1; display: flex; flex-direction: column; }
+
         .header-row { display: flex; justify-content: space-between; }
         .vereinsname { font-size: 16pt; font-weight: bold; }
         .vereinsname-sub { font-size: 13pt; font-weight: bold; margin-top: 4px; }
@@ -30,63 +28,72 @@
         .ruecksende-info { font-size: 7.5pt; font-style: italic; margin-bottom: 15px; }
         .adresse-block { margin-bottom: 35px; line-height: 1.1; font-size: 11pt; }
         .kennzeichen-zeile { width: 100%; margin-bottom: 10mm; font-size: 10pt; }
-        .betreff { font-size: 13pt; font-weight: bold; margin-bottom: 30px; }
+        .betreff { font-size: 13pt; font-weight: bold; margin-bottom: 15px; }
         p { margin-bottom: 15px; text-align: justify; }
         .bankverbindung-text { margin: 15px 0 20px 30px; font-family: monospace; font-size: 10.5pt; }
-        .unterschrift-platz { height: 20mm; }
-        .brief-fusszeile { width: 100%; border-top: 0.5px solid #ccc; margin-top: 10mm; font-size: 7.5pt; color: #555; }
+        .unterschrift-platz { height: 5mm; }
+
+        /* Fußzeile mit negativem Margin, um den Abstand zu verringern */
+        .brief-fusszeile {
+            margin-top: -20px;
+            border-top: 0.5px solid #ccc;
+            padding-top: 5px;
+            font-size: 7.5pt;
+            color: #555;
+        }
         .fuss-spalte { width: 25%; vertical-align: top; padding-right: 5px; }
     </style>
 </head>
 <body>
 <div class="din-a4-blatt">
-    <div class="knickhilfe"></div>
-    <div class="header-row">
-        <div>
-            <div class="vereinsname">Arbeitsgemeinschaft</div>
-            <div class="vereinsname-sub">Limnologie und Gewässerschutz e. V.</div>
+    <div class="hauptinhalt">
+        <div class="header-row">
+            <div>
+                <div class="vereinsname">Arbeitsgemeinschaft</div>
+                <div class="vereinsname-sub">Limnologie und Gewässerschutz e. V.</div>
+            </div>
         </div>
-    </div>
-    <hr class="trennlinie">
-    <div class="ruecksende-info">Schatzmeister Alg e.V. Wolfram Hildebrandt., Obentrautstr. 14, 30419 Hannover</div>
+        <hr class="trennlinie">
+        <div class="ruecksende-info">Schatzmeister Alg e.V. Wolfram Hildebrandt, Obentrautstr. 14, 30419 Hannover</div>
 
-    <div class="adresse-block">
-        [Anrede]<br>
-        [Titel] [Vorname] [Nachname]<br>
-        [Strasse]<br>
-        <br>
-        [PLZ] [Ort]
-    </div>
+        <div class="adresse-block">
+            [Anrede]<br>
+            [Titel] [Vorname] [Nachname]<br>
+            [Strasse]<br>
+            <br>
+            [PLZ] [Ort]
+        </div>
 
-    <table class="kennzeichen-zeile">
-        <tr>
-            <td><strong>Mein Zeichen:</strong> ALG-Hi</td>
-            <td><strong>Telefon:</strong> 0511/731193</td>
-            <td><strong>Datum:</strong> [Datum]</td>
-        </tr>
-    </table>
+        <table class="kennzeichen-zeile">
+            <tr>
+                <td><strong>Mein Zeichen:</strong> ALG-Hi</td>
+                <td><strong>Telefon:</strong> 0511/731193</td>
+                <td><strong>Datum:</strong> [Datum]</td>
+            </tr>
+        </table>
 
-    <div class="betreff">Betreff: Ihre Mitgliedschaft in der ALG</div>
+        <div class="betreff">Betreff: Ihre Mitgliedschaft in der ALG</div>
 
-    <div class="anrede">[Brief_Anrede],</div>
+        <div class="anrede">[Brief_Anrede],</div>
 
-    <p>der Jahresbeitrag für Ihre Mitgliedschaft in der Arbeitsgemeinschaft Limnologie und Gewässerschutz e.V. für das Jahr 2026 ist nach Überprüfung meiner Beitragsliste fällig geworden.</p>
+        <p>der Jahresbeitrag für Ihre Mitgliedschaft in der Arbeitsgemeinschaft Limnologie und Gewässerschutz e.V. für das Jahr 2026 ist nach Überprüfung meiner Beitragsliste fällig geworden.</p>
 
-    <p>Ich bitte Sie daher, den Betrag von 20,- € auf das Konto der ALG zu überweisen:</p>
+        <p>Ich bitte Sie daher, den Betrag von 20,- € auf das Konto der ALG zu überweisen:</p>
 
-    <div class="bankverbindung-text">
-        Sparkasse Hannover<br>
-        IBAN: DE66 2505 0180 0910 2217 90<br>
-        BIC: SPKHDE2HXXX
-    </div>
+        <div class="bankverbindung-text">
+            Sparkasse Hannover<br>
+            IBAN: DE66 2505 0180 0910 2217 90<br>
+            BIC: SPKHDE2HXXX
+        </div>
 
-    <p>Vielen Dank für Ihre Unterstützung.</p>
+        <p>Vielen Dank für Ihre Unterstützung.</p>
 
-    <div>
-        Mit freundlichen Grüßen<br>
-        <div class="unterschrift-platz"></div>
-        Wolfram Hildebrandt<br>
-        (Schatzmeister)
+        <div>
+            Mit freundlichen Grüßen<br>
+            <div class="unterschrift-platz"></div>
+            Wolfram Hildebrandt<br>
+            (Schatzmeister)
+        </div>
     </div>
 
     <table class="brief-fusszeile">
