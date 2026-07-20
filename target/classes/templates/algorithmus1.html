@@ -12,15 +12,14 @@
             box-sizing: border-box;
             padding: 15mm 15mm 10mm 25mm;
             background-color: #ffffff;
-            margin: 0 auto;
+            margin: 0 auto 20px auto; /* Abstand zwischen den Seiten */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
         @media print {
             .din-a4-blatt { width: 100%; max-width: 210mm; box-shadow: none; margin: 0; }
             body { background-color: #ffffff; padding: 0; }
         }
-        /* Hauptbereich für den Brieftext */
         .hauptinhalt { flex-grow: 1; display: flex; flex-direction: column; }
-
         .header-row { display: flex; justify-content: space-between; }
         .vereinsname { font-size: 16pt; font-weight: bold; }
         .vereinsname-sub { font-size: 13pt; font-weight: bold; margin-top: 4px; }
@@ -32,8 +31,6 @@
         p { margin-bottom: 15px; text-align: justify; }
         .bankverbindung-text { margin: 15px 0 20px 30px; font-family: monospace; font-size: 10.5pt; }
         .unterschrift-platz { height: 5mm; }
-
-        /* Fußzeile mit negativem Margin, um den Abstand zu verringern */
         .brief-fusszeile {
             margin-top: -20px;
             border-top: 0.5px solid #ccc;
@@ -45,6 +42,9 @@
     </style>
 </head>
 <body>
+
+<!-- Beispiel für eine Seite. Wenn mehrere Seiten existieren,
+     wird die Klasse 'din-a4-blatt' mehrfach verwendet. -->
 <div class="din-a4-blatt">
     <div class="hauptinhalt">
         <div class="header-row">
@@ -105,5 +105,19 @@
         </tr>
     </table>
 </div>
+
+<script>
+    /**
+     * Scrollt das WebView zu einer bestimmten Seitennummer (0-basiert).
+     * @param {number} pageIndex - Die Seitennummer.
+     */
+    window.scrollToPage = function(pageIndex) {
+        // Die Höhe eines A4-Blattes in Pixeln (bei 96 DPI ca. 1122px)
+        // plus margin-bottom von 20px.
+        const pageHeight = 1142;
+        window.scrollTo(0, pageIndex * pageHeight);
+    };
+</script>
+
 </body>
 </html>
