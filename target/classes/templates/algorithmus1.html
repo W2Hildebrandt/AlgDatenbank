@@ -1,119 +1,240 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>AlgDatenbank - Briefdruck</title>
     <style>
-        body { background-color: #f0f2f5; margin: 0; padding: 20px; }
-        .din-a4-blatt {
-            display: flex;
-            flex-direction: column;
-            height: 297mm;
+        /* --- DRUCKER-EINSTELLUNGEN --- */
+        @page {
+            size: 210mm 297mm;
+            margin: 0mm; /* Ränder werden komplett vom Blatt-Padding gesteuert */
+        }
+
+        * {
             box-sizing: border-box;
-            padding: 15mm 15mm 10mm 25mm;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10pt;
+            color: #000000;
+        }
+
+        /* --- DIN A4 BLATT (1:1 VORSCHAU UND DRUCK) --- */
+        .din-a4-blatt {
+            width: 210mm;
+            height: 297mm;
+            /* DIN 5008 Ränder: Oben 20mm, Rechts 15mm, Unten 15mm, Links 25mm */
+            padding: 27mm 15mm 15mm 25mm !important;
             background-color: #ffffff;
-            margin: 0 auto 20px auto; /* Abstand zwischen den Seiten */
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin: 0 auto 20px auto;
+            position: relative !important; /* Wichtig für die Positionierung von Logo und Fußzeile */
+            box-shadow: 0 0 10px rgba(0,0,0,0.15);
+            page-break-after: always;
+            page-break-inside: avoid;
+            overflow: hidden;
         }
+
         @media print {
-            .din-a4-blatt { width: 100%; max-width: 210mm; box-shadow: none; margin: 0; }
-            body { background-color: #ffffff; padding: 0; }
+            html, body {
+                background-color: #ffffff;
+            }
+            .din-a4-blatt {
+                box-shadow: none;
+                margin: 0;
+            }
         }
-        .hauptinhalt { flex-grow: 1; display: flex; flex-direction: column; }
-        .header-row { display: flex; justify-content: space-between; }
-        .vereinsname { font-size: 16pt; font-weight: bold; }
-        .vereinsname-sub { font-size: 13pt; font-weight: bold; margin-top: 4px; }
-        .trennlinie { border: 0; border-top: 1px solid #000; margin: 8px 0 12px 0; }
-        .ruecksende-info { font-size: 7.5pt; font-style: italic; margin-bottom: 15px; }
-        .adresse-block { margin-bottom: 35px; line-height: 1.1; font-size: 11pt; }
-        .kennzeichen-zeile { width: 100%; margin-bottom: 10mm; font-size: 10pt; }
-        .betreff { font-size: 13pt; font-weight: bold; margin-bottom: 15px; }
-        p { margin-bottom: 15px; text-align: justify; }
-        .bankverbindung-text { margin: 15px 0 20px 30px; font-family: monospace; font-size: 10.5pt; }
-        .unterschrift-platz { height: 5mm; }
-        .brief-fusszeile {
-            margin-top: -20px;
-            border-top: 0.5px solid #ccc;
-            padding-top: 5px;
+
+        /* --- BRIEF-KOPF & ADRESSE (DIN 5008) --- */
+        .header-row {
+            width: 100%;
+        }
+
+        .vereinsname {
+            font-size: 15pt;
+            font-weight: bold;
+        }
+
+        .vereinsname-sub {
+            font-size: 12pt;
+            font-weight: bold;
+            margin-top: 2px;
+        }
+
+        /* --- Positionierung des Logos oben rechts auf dem Briefbogen --- */
+        .brief-logo {
+            position: absolute !important;
+            top: 20mm !important;
+            right: 15mm !important;
+            max-width: 45mm !important;
+            height: auto !important;
+            z-index: 100;
+        }
+
+        .trennlinie {
+            border: 0;
+            border-top: 1px solid #000000;
+            margin: 6px 0 8px 0;
+        }
+
+        .ruecksende-info {
             font-size: 7.5pt;
-            color: #555;
+            font-style: italic;
+            margin-bottom: 10mm;
         }
-        .fuss-spalte { width: 25%; vertical-align: top; padding-right: 5px; }
+
+        .adresse-block {
+            margin-bottom: 12mm;
+            line-height: 1.25;
+            font-size: 10pt;
+        }
+
+        .kennzeichen-zeile {
+            width: 100%;
+            margin-bottom: 8mm;
+            font-size: 9.5pt;
+            border-collapse: collapse;
+        }
+
+        .betreff {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-bottom: 6mm;
+        }
+
+        .anrede {
+            margin-bottom: 4mm;
+        }
+
+        p {
+            margin-top: 0;
+            margin-bottom: 4mm;
+            text-align: justify;
+            line-height: 1.35;
+        }
+
+        .bankverbindung-text {
+            margin: 4mm 0 6mm 10mm;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 10pt;
+            line-height: 1.3;
+        }
+
+        .unterschrift-bereich {
+            margin-top: 6mm;
+            line-height: 1.3;
+        }
+
+        .unterschrift-platz {
+            height: 10mm;
+        }
+
+        /* --- FUSSZEILE (UNTERER BLATTRAND) --- */
+        .brief-fusszeile {
+            position: absolute;
+            bottom: 12mm;                 /* Fest 12mm über dem unteren Papierrand */
+            left: 25mm;                   /* DIN 5008 Einzug links (25mm) */
+            width: 170mm;                  /* Nutzbreite: 210mm - 25mm - 15mm = 170mm */
+            border-top: 0.5pt solid #888888;
+            padding-top: 2mm;
+            font-size: 7.5pt;
+            color: #333333;
+            border-collapse: collapse;
+        }
+
+        .fuss-spalte {
+            width: 25%;
+            vertical-align: top;
+            padding-right: 2mm;
+            line-height: 1.2;
+        }
     </style>
 </head>
 <body>
 
-<!-- Beispiel für eine Seite. Wenn mehrere Seiten existieren,
-     wird die Klasse 'din-a4-blatt' mehrfach verwendet. -->
 <div class="din-a4-blatt">
-    <div class="hauptinhalt">
-        <div class="header-row">
-            <div>
-                <div class="vereinsname">Arbeitsgemeinschaft</div>
-                <div class="vereinsname-sub">Limnologie und Gewässerschutz e. V.</div>
-            </div>
-        </div>
-        <hr class="trennlinie">
-        <div class="ruecksende-info">Schatzmeister Alg e.V. Wolfram Hildebrandt, Obentrautstr. 14, 30419 Hannover</div>
-
-        <div class="adresse-block">
-            [Anrede]<br>
-            [Titel] [Vorname] [Nachname]<br>
-            [Strasse]<br>
-            <br>
-            [PLZ] [Ort]
-        </div>
-
-        <table class="kennzeichen-zeile">
-            <tr>
-                <td><strong>Mein Zeichen:</strong> ALG-Hi</td>
-                <td><strong>Telefon:</strong> 0511/731193</td>
-                <td><strong>Datum:</strong> [Datum]</td>
-            </tr>
-        </table>
-
-        <div class="betreff">Betreff: Ihre Mitgliedschaft in der ALG</div>
-
-        <div class="anrede">[Brief_Anrede],</div>
-
-        <p>der Jahresbeitrag für Ihre Mitgliedschaft in der Arbeitsgemeinschaft Limnologie und Gewässerschutz e.V. für das Jahr 2026 ist nach Überprüfung meiner Beitragsliste fällig geworden.</p>
-
-        <p>Ich bitte Sie daher, den Betrag von 20,- € auf das Konto der ALG zu überweisen:</p>
-
-        <div class="bankverbindung-text">
-            Sparkasse Hannover<br>
-            IBAN: DE66 2505 0180 0910 2217 90<br>
-            BIC: SPKHDE2HXXX
-        </div>
-
-        <p>Vielen Dank für Ihre Unterstützung.</p>
-
+    <!-- Logo oben rechts -->
+    <!-- <img src="bilder/logo-alg.png" class="brief-logo" alt="ALG Logo" /> -->
+    <img src="bilder/logo-alg.png" class="brief-logo" alt="ALG Logo" />
+    <div class="header-row">
         <div>
-            Mit freundlichen Grüßen<br>
-            <div class="unterschrift-platz"></div>
-            Wolfram Hildebrandt<br>
-            (Schatzmeister)
+            <div class="vereinsname">Arbeitsgemeinschaft</div>
+            <div class="vereinsname-sub">Limnologie und Gewässerschutz e. V.</div>
         </div>
     </div>
+    <hr class="trennlinie" />
+    <div class="ruecksende-info">Schatzmeister ALG e.V. Wolfram Hildebrandt, Obentrautstr. 14, 30419 Hannover</div>
 
+    <div class="adresse-block">
+        [Anrede]<br />
+        [Titel] [Vorname] [Nachname]<br />
+        [Strasse]<br />
+        <br />
+        [PLZ] [Ort]
+    </div>
+
+    <table class="kennzeichen-zeile">
+        <tr>
+            <td style="width: 35%;"><strong>Mein Zeichen:</strong> ALG-Hi</td>
+            <td style="width: 35%;"><strong>Telefon:</strong> 0511/731193</td>
+            <td style="width: 30%;"><strong>Datum:</strong> [Datum]</td>
+        </tr>
+    </table>
+
+    <div class="betreff">Betreff: Ihre Mitgliedschaft in der ALG</div>
+
+    <div class="anrede">[Brief_Anrede],</div>
+
+    <p>der Jahresbeitrag für Ihre Mitgliedschaft in der Arbeitsgemeinschaft Limnologie und Gewässerschutz e.V. für das Jahr 2026 ist nach Überprüfung meiner Beitragsliste fällig geworden.</p>
+
+    <p>Ich bitte Sie daher, den Betrag von 20,- € auf das Konto der ALG zu überweisen:</p>
+
+    <div class="bankverbindung-text">
+        Sparkasse Hannover<br />
+        IBAN: DE66 2505 0180 0910 2217 90<br />
+        BIC: SPKHDE2HXXX
+    </div>
+
+    <p>Vielen Dank für Ihre Unterstützung.</p>
+
+    <div class="unterschrift-bereich">
+        Mit freundlichen Grüßen<br />
+        <div class="unterschrift-platz"></div>
+        Wolfram Hildebrandt<br />
+        (Schatzmeister)
+    </div>
+
+    <!-- Die Fußzeile als absolute Position unten im DIN A4 Blatt -->
     <table class="brief-fusszeile">
         <tr>
-            <td class="fuss-spalte"><strong>Anschrift:</strong><br>Obentrautstr. 14<br>30419 Hannover</td>
-            <td class="fuss-spalte"><strong>Kontakt:</strong><br>Tel: 0511/731193<br>wolframhildebrandt@gmx.de</td>
-            <td class="fuss-spalte"><strong>Bank:</strong><br>Sparkasse Hannover<br>DE66 2505 0180 0910 2217 90</td>
-            <td class="fuss-spalte"><strong>Web:</strong><br>www.alg-hannover.de</td>
+            <td class="fuss-spalte">
+                <strong>Anschrift:</strong><br />
+                Obentrautstr. 14<br />
+                30419 Hannover
+            </td>
+            <td class="fuss-spalte">
+                <strong>Kontakt:</strong><br />
+                Tel: 0511/731193<br />
+                wolframhildebrandt@gmx.de
+            </td>
+            <td class="fuss-spalte">
+                <strong>Bank:</strong><br />
+                Sparkasse Hannover<br />
+                DE66 2505 0180 0910 2217 90
+            </td>
+            <td class="fuss-spalte">
+                <strong>Web:</strong><br />
+                www.alg-hannover.de
+            </td>
         </tr>
     </table>
 </div>
 
 <script>
-    /**
-     * Scrollt das WebView zu einer bestimmten Seitennummer (0-basiert).
-     * @param {number} pageIndex - Die Seitennummer.
-     */
     window.scrollToPage = function(pageIndex) {
-        // Die Höhe eines A4-Blattes in Pixeln (bei 96 DPI ca. 1122px)
-        // plus margin-bottom von 20px.
         const pageHeight = 1142;
         window.scrollTo(0, pageIndex * pageHeight);
     };
